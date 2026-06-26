@@ -6,7 +6,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 [![Pytest](https://img.shields.io/badge/Pytest-7.1+-0A9EDC.svg)](https://docs.pytest.org)
-[![Mypy](https://img.shields.io/badge/Mypy-1.19+-2F4858.svg)](https://mypy-lang.org)
+[![Mypy](https://img.shields.io/badge/Mypy-2.1+-2F4858.svg)](https://mypy-lang.org)
 
 ## Быстрый старт
 
@@ -24,22 +24,22 @@ uv sync --group dev
 
 3. Активируйте виртуальное окружение
 
-# Linux/macOS
+### Linux/macOS
 ```bash
 source .venv/bin/activate
 ```
 
-# Windows (Git Bash)
+### Windows (Git Bash)
 ```bash
 source .venv/Scripts/activate
 ```
 
-# Windows (PowerShell)
+### Windows (PowerShell)
 ```bash
 .venv\Scripts\Activate.ps1
 ```
 
-# Windows (CMD)
+### Windows (CMD)
 ```bash
 .venv\Scripts\activate.bat
 ```
