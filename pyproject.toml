@@ -8,6 +8,7 @@ dependencies = [
     "pygame>=2.6.1",
     "asyncpg>=0.31.0",
     "sqlalchemy>=2.0.48,<3.0.0",
+    "dotenv>=0.9.9",
 ]
 
 [dependency-groups]
