@@ -100,7 +100,7 @@ def get_player_name() -> str:
                     return name.strip()
                 elif event.key == pygame.K_BACKSPACE:
                     name = name[:-1]
-                elif event.key != pygame.K_RETURN and len(name) < 15:
+                elif event.key != pygame.K_RETURN and len(name) < settings.PLAYER_NAME_LENGTH:
                     name += event.unicode
 
         pygame.display.update()

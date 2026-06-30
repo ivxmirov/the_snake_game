@@ -31,3 +31,6 @@ BRONZE_COLOR = pygame.Color(205, 127, 50)
 
 # Скорость
 SPEED = 10
+
+# Текст
+PLAYER_NAME_LENGTH = 20
