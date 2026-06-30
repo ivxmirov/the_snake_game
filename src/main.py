@@ -18,7 +18,7 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)  # Уменьшенный шрифт
 
 
-# ─── Работа с БД ─────────────────────────────────────────────
+# ──────────────────────────────────────────── Работа с БД ────────────────────────────────────────────
 
 async def get_or_create_player(name: str) -> Player:
     """Получить игрока по имени или создать нового"""
@@ -40,20 +40,15 @@ async def update_score(name: str, score: int) -> int:
         result = await db.execute(select(Player).filter(Player.name == name))
         player = result.scalars().first()
 
-        print(f"DEBUG: name={name}, found={player is not None}")  # ← отладка
-
         if not player:
             player = Player(name=name, high_score=0, games_played=0)
             db.add(player)
-            print(f"DEBUG: created new player {name}")  # ← отладка
 
         if player.high_score is None or score > player.high_score:
             player.high_score = score
-            print(f"DEBUG: updated high_score to {score}")  # ← отладка
         
         player.games_played += 1
         await db.commit()
-        print(f"DEBUG: committed, high_score={player.high_score}")  # ← отладка
         return player.high_score
 
 
@@ -66,7 +61,7 @@ async def get_top_players(limit: int = 10) -> list[Player]:
         return list(result.scalars().all())
 
 
-# ─── Экраны ──────────────────────────────────────────────────
+# ──────────────────────────────────────────── Экраны ────────────────────────────────────────────
 
 def draw_text_centered(text: str, y: int, color=settings.TEXT_COLOR) -> None:
     """Отрисовать текст по центру экрана"""
@@ -161,7 +156,7 @@ async def show_top_scores() -> None:
 
                 draw_text_centered(text, 30 + i * 28, color)
 
-        draw_text_centered("Нажмите любую клавишу...", settings.SCREEN_HEIGHT - 20)
+        draw_text_centered("Нажмите любую клавишу, чтобы играть...", settings.SCREEN_HEIGHT - 20)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -174,7 +169,7 @@ async def show_top_scores() -> None:
         clock.tick(30)
 
 
-# ─── Игровой цикл ────────────────────────────────────────────
+# ──────────────────────────────────────────── Игровой цикл ────────────────────────────────────────────
 
 async def game_loop(player_name: str) -> None:
     """Основной игровой цикл"""
@@ -185,18 +180,23 @@ async def game_loop(player_name: str) -> None:
         apple = Apple()
         apple.randomize_position(snake.positions)
         score = 0
+        speed = settings.SPEED
 
         running = True
         while running:
-            clock.tick(settings.SPEED)
+            clock.tick(speed)
             handle_keys(snake)
             snake.update_direction()
             snake.move()
             score = snake.length - 1
+            
+            # Ускорение каждые 10 очков, максимум SPEED + 10
+            speed = settings.SPEED + min(score // 10, 10)
 
             # Проверка на съедание яблока
             if snake.get_head_position() == apple.position:
                 snake.grow_flag = True
+                snake.darken()
                 apple.randomize_position(snake.positions)
 
             # Отрисовка

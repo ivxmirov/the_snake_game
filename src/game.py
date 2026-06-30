@@ -97,6 +97,7 @@ class Snake(GameObject):
         self.positions = [self.position]
         self.direction = choice([settings.UP, settings.DOWN, settings.LEFT, settings.RIGHT])
         self.collision = False
+        self.body_color = settings.SNAKE_BODY_COLOR
 
     def draw(self, surface):
         """Отобразить змейку на игровом поле"""
@@ -118,6 +119,14 @@ class Snake(GameObject):
                 (settings.GRID_SIZE, settings.GRID_SIZE)
             )
             pygame.draw.rect(surface, settings.BOARD_BACKGROUND_COLOR, last_rect)
+
+    def darken(self) -> None:
+        """Затемнить цвет змейки на 1 тон"""
+        # Уменьшаем каждый канал на 6, но не ниже 0
+        r = max(0, self.body_color.r - 6)
+        g = max(0, self.body_color.g - 6)
+        b = max(0, self.body_color.b - 6)
+        self.body_color = pygame.Color(r, g, b)
 
 
 def handle_keys(snake: Snake) -> None:
