@@ -146,7 +146,7 @@ async def show_top_scores() -> None:
             draw_text_centered("Пока нет рекордов", settings.SCREEN_HEIGHT // 2)
         else:
             for i, player in enumerate(top_players[:10], 1):
-                name_short = player.name[:10]
+                name_short = player.name[:20]
                 text = f"{i}. {name_short}: {player.high_score}"
 
                 # Выбираем цвет в зависимости от места
