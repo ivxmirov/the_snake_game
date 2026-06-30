@@ -40,14 +40,21 @@ async def update_score(name: str, score: int) -> int:
         result = await db.execute(select(Player).filter(Player.name == name))
         player = result.scalars().first()
 
-        if player:
-            if score > player.high_score:
-                player.high_score = score
-            player.games_played += 1
-            await db.commit()
-            return player.high_score
+        print(f"DEBUG: name={name}, found={player is not None}")  # ← отладка
 
-        return score
+        if not player:
+            player = Player(name=name, high_score=0, games_played=0)
+            db.add(player)
+            print(f"DEBUG: created new player {name}")  # ← отладка
+
+        if player.high_score is None or score > player.high_score:
+            player.high_score = score
+            print(f"DEBUG: updated high_score to {score}")  # ← отладка
+        
+        player.games_played += 1
+        await db.commit()
+        print(f"DEBUG: committed, high_score={player.high_score}")  # ← отладка
+        return player.high_score
 
 
 async def get_top_players(limit: int = 10) -> list[Player]:
@@ -138,12 +145,23 @@ async def show_top_scores() -> None:
         if not top_players:
             draw_text_centered("Пока нет рекордов", settings.SCREEN_HEIGHT // 2)
         else:
-            for i, player in enumerate(top_players[:8], 1):
+            for i, player in enumerate(top_players[:10], 1):
                 name_short = player.name[:10]
                 text = f"{i}. {name_short}: {player.high_score}"
-                draw_text_centered(text, 30 + i * 28)
 
-        draw_text_centered("Любая клавиша...", settings.SCREEN_HEIGHT - 20)
+                # Выбираем цвет в зависимости от места
+                if i == 1:
+                    color = settings.GOLD_COLOR
+                elif i == 2:
+                    color = settings.SILVER_COLOR
+                elif i == 3:
+                    color = settings.BRONZE_COLOR
+                else:
+                    color = settings.TEXT_COLOR
+
+                draw_text_centered(text, 30 + i * 28, color)
+
+        draw_text_centered("Нажмите любую клавишу...", settings.SCREEN_HEIGHT - 20)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

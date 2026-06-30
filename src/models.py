@@ -9,8 +9,8 @@ class Player(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
-    high_score: Mapped[int] = mapped_column(Integer, default=0)
-    games_played: Mapped[int] = mapped_column(Integer, default=0)
+    high_score: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    games_played: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     last_played: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.now, onupdate=datetime.now
